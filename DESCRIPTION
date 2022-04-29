@@ -1,0 +1,20 @@
+Package: Pandem2multiparametric
+Title: Data simulator for Pandem2
+Version: 0.5
+Authors@R: 
+    c(person("Maxime", "Bonjean", , "m.bonjean@uclouvain.be", role = c("aut", "cre")),
+      person("Julie", "Hurel", , "julie.hurel@uclouvain.be", role = c("aut")),
+      person("Axelle", "Loriot", , "axelle.loriot@uclouvain.be", role = c("aut")),
+      person("Jerome", "Ambroise", , "jerome.ambroise@uclouvain.be", role = c("aut")),
+      person("Jean-Luc", "Gala", , "jean-luc.gala@uclouvain.be", role = c("aut"))
+      )
+Description: this package was created for the Pandem2 project.  
+License: MIT
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr
+Depends: class,dplyr,purrr , lubridate ,splitstackshape
