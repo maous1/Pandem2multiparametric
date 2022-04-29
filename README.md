@@ -1,15 +1,15 @@
-# Pandem2simulator
+# Pandem2multiparametric
 Here is the command to install the package
 
 ```
 install.packages("devtools")
-devtools::install_github("maous1/Pandem2simulator")
+devtools::install_github("maous1/Pandem2multiparametric")
 ```
 
 I propose a script to test the package
 
 ```
-library(Pandem2simulator)
+library(Pandem2multiparametric)
 
 # Loading the data
 data("variants_aggregated")
