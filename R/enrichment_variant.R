@@ -42,7 +42,8 @@ enrichment_variant <- function(data_aggregated, group, variants, multiplicateur)
       mutate(pourcentage = nb / sum(nb)) %>%
       filter(variant == variants)
 
-    while (pourcentage_wanted$pourcentage < sum(pourcentage_other$pourcentage) * multiplicateur | pourcentage_wanted$pourcentage == 1 | sum(pourcentage_other$pourcentage) == 0) {
+
+    while (ifelse(is_empty(pourcentage_wanted$pourcentage),ifelse(is_empty(pourcentage_other$pourcentage),FALSE,TRUE),ifelse(is_empty(pourcentage_other$pourcentage),FALSE,pourcentage_wanted$pourcentage < sum(pourcentage_other$pourcentage) * multiplicateur & pourcentage_wanted$pourcentage != 1))  ) {
       targetted_category <- full_desaggregated_week %>% filter(age_group == group)
       other_category <- full_desaggregated_week %>% filter(age_group != group)
       targetted_category_wanted <- targetted_category %>% filter(variant == variants)
@@ -51,11 +52,9 @@ enrichment_variant <- function(data_aggregated, group, variants, multiplicateur)
       other_category_wanted <- other_category %>% filter(variant == variants)
       other_category_unwanted <- other_category %>% filter(variant != variants)
 
-      row_wanted <- targetted_category_wanted %>%
-        group_by(country_code, time) %>%
-        slice(1)
+
       random <- sample(1:length(targetted_category_unwanted$country_code), 1)
-      variant_delete <- targetted_category_unwanted %>%
+      row_unwanted <- targetted_category_unwanted %>%
         group_by(country_code, time) %>%
         slice(random)
       targetted_category_unwanted <- targetted_category_unwanted %>%
@@ -63,13 +62,14 @@ enrichment_variant <- function(data_aggregated, group, variants, multiplicateur)
         slice(-random)
 
       random <- sample(1:length(other_category_wanted$country_code), 1)
-      group_delete <- other_category_wanted %>%
+      row_wanted <- other_category_wanted %>%
         group_by(country_code, time) %>%
         slice(random)
       other_category_wanted <- other_category_wanted %>%
         group_by(country_code, time) %>%
         slice(-random)
-      row_unwanted <- tibble(country_code = country, time = week, age_group = group_delete$age_group, variant = variant_delete$variant)
+      row_wanted$age_group = group
+      row_unwanted$age_group <- row_wanted$age_group
       full_desaggregated_week <- rbind(targetted_category_unwanted, targetted_category_wanted, row_wanted, other_category_wanted, other_category_unwanted, row_unwanted)
       fullother <- rbind(other_category_wanted, other_category_unwanted, row_unwanted)
 
