@@ -1,17 +1,17 @@
 
 #' Title
 #'
-#' @param datedepart
-#' @param datefin
+#' @param start
+#' @param end
 #'
 #' @return
 #' @export
 #'
 #' @examples
-format_date_pandem <- function(datedepart, datefin) {
-  datedepart <- as.Date(datedepart)
-  datefin <- as.Date(datefin)
-  time <- datedepart:datefin
+format_date_pandem <- function(start, end) {
+  start <- as.Date(start)
+  end <- as.Date(end)
+  time <- start:end
   class(time) <- "Date"
   result <- data.frame(
     time,

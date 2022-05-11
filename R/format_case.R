@@ -4,7 +4,7 @@
 #' @export
 #' @examples
 format_case <- function(case_aggregated, start, end) {
-  date <- format_date_pandem(datedepart = start, datefin = end)
+  date <- format_date_pandem(start = start, end = end)
   case_aggregated <- right_join(x = case_aggregated, y = date, "year_week")
   case_aggregated_format <- case_aggregated %>%
     select(country_code, year_week, time, age_group, new_cases) %>%

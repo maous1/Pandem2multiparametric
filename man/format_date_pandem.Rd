@@ -4,10 +4,10 @@
 \alias{format_date_pandem}
 \title{Title}
 \usage{
-format_date_pandem(datedepart, datefin)
+format_date_pandem(start, end)
 }
 \arguments{
-\item{datefin}{}
+\item{end}{}
 }
 \value{
 

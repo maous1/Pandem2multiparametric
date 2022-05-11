@@ -1,32 +1,27 @@
 #' disaggregate hospitalisation files
 #'
 #' @param hospitalisation
-#'
-#' @param vaccination
+#' @param start
+#' @param end
 #' @param case_aggregated
 #'
 #' @return
 #' @export
 #' @examples
-format_hospitalisation <- function(hospitalisation, vaccination, case_aggregated, datedepart, datefin) {
-  date <- format_date_pandem(datedepart = datedepart, datefin = datefin)
+format_hospitalisation <- function(hospitalisation, case_aggregated, start, end) {
+  date <- format_date_pandem(start = start, end = end)
 
-  Population <- vaccination %>%
-    select(ReportingCountry, Population) %>%
-    distinct() %>%
-    rename(country_code = ReportingCountry)
-
-  list_country_code <- case_aggregated %>%
-    select(ï..country, country_code) %>%
-    distinct() %>%
-    filter(country_code != "BG")
+  Population <- case_aggregated %>%
+    select(country,country_code, age_group,population) %>%
+    distinct()%>%
+    group_by(country,country_code)%>%
+    summarise(population = sum(population))
 
   hospitalisation_detected <- hospitalisation %>%
-    left_join(list_country_code, by = "ï..country") %>%
     filter(indicator == "Weekly new hospital admissions per 100k") %>%
-    left_join(Population, by = "country_code") %>%
+    left_join(Population, by = "country") %>%
     group_by(country_code, year_week) %>%
-    summarise(new_cases = (value * Population / 100000))
+    summarise(new_cases = (value * population / 100000))
 
 
   hospitalisation_detected$year_week <- sub(x = hospitalisation_detected$year_week, pattern = "W", replacement = "")
