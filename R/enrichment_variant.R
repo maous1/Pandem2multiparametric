@@ -1,15 +1,20 @@
-#' The function increases the number of convictions of a variant over an age group. The increase is managed by the multiplicateur input (example 1.3 = 30% more)
+#' Title
 #'
 #' @param data_aggregated
+#' @param variable
 #' @param group
 #' @param variants
 #' @param multiplicateur
+#' @param time
 #'
 #' @return
 #' @export
 #'
 #' @examples
-enrichment_variant <- function(data_aggregated, group, variants, multiplicateur) {
+enrichment_variant <- function(data_aggregated, variable ,group, variants, multiplicateur,time) {
+
+
+  names(data_aggregated)[names(data_aggregated) %in% time] <- "time"
   semaine <- unique(data_aggregated$time)
   country <- unique(data_aggregated$country_code)
   full_aggregated <- data.frame()
@@ -19,14 +24,25 @@ enrichment_variant <- function(data_aggregated, group, variants, multiplicateur)
     full_desaggregated_week <- expandRows(data_aggregated_week, count = "nb", drop = T)
 
     pourcentage_wanted <- full_desaggregated_week %>%
-      group_by(country_code, time, age_group, variant) %>%
+      group_by_all() %>%
       summarise(nb = n()) %>%
-      group_by(country_code, time, age_group) %>%
-      mutate(pourcentage = nb / sum(nb)) %>%
-      filter(variant == variants & age_group == group)
+      group_by(across(all_of(variable))) %>%
+      mutate(pourcentage = nb / sum(nb))%>%
+      filter(variant == variants)
+    for (i in 1:length(group)) {
+      pourcentage_wanted= pourcentage_wanted%>% filter(!!sym(variable[i]) == group[i])
+    }
 
-    targetted_category <- full_desaggregated_week %>% filter(age_group == group)
-    other_category <- full_desaggregated_week %>% filter(age_group != group)
+
+    targetted_category <- full_desaggregated_week
+    other_category = data.frame()
+    for (i in 1:length(group)) {
+      other_category_current = targetted_category%>%filter(!!sym(variable[i]) != group[i])
+      targetted_category= targetted_category%>% filter(!!sym(variable[i]) == group[i])
+      other_category= union_all(other_category,other_category_current)
+    }
+
+
     targetted_category_unwanted <- targetted_category %>% filter(variant != variants)
 
     other_category_wanted <- other_category %>% filter(variant == variants)
@@ -36,16 +52,22 @@ enrichment_variant <- function(data_aggregated, group, variants, multiplicateur)
 
 
     pourcentage_other <- fullother %>%
-      group_by(country_code, time, age_group, variant) %>%
+      group_by_all() %>%
       summarise(nb = n()) %>%
-      group_by(country_code, time) %>%
+      group_by(across(all_of(variable))) %>%
       mutate(pourcentage = nb / sum(nb)) %>%
       filter(variant == variants)
 
 
     while (ifelse(is_empty(pourcentage_wanted$pourcentage),ifelse(is_empty(pourcentage_other$pourcentage),FALSE,TRUE),ifelse(is_empty(pourcentage_other$pourcentage),FALSE,pourcentage_wanted$pourcentage < sum(pourcentage_other$pourcentage) * multiplicateur & pourcentage_wanted$pourcentage != 1))  ) {
-      targetted_category <- full_desaggregated_week %>% filter(age_group == group)
-      other_category <- full_desaggregated_week %>% filter(age_group != group)
+
+      targetted_category <- full_desaggregated_week
+      other_category = data.frame()
+      for (i in 1:length(group)) {
+        other_category_current = targetted_category%>%filter(!!sym(variable[i]) != group[i])
+        targetted_category= targetted_category%>% filter(!!sym(variable[i]) == group[i])
+        other_category= union_all(other_category,other_category_current)
+      }
       targetted_category_wanted <- targetted_category %>% filter(variant == variants)
       targetted_category_unwanted <- targetted_category %>% filter(variant != variants)
 
@@ -54,45 +76,42 @@ enrichment_variant <- function(data_aggregated, group, variants, multiplicateur)
 
 
       random <- sample(1:length(targetted_category_unwanted$country_code), 1)
-      row_unwanted <- targetted_category_unwanted %>%
-        group_by(country_code, time) %>%
+      row_wanted <- targetted_category_unwanted %>%
         slice(random)
       targetted_category_unwanted <- targetted_category_unwanted %>%
-        group_by(country_code, time) %>%
         slice(-random)
 
       random <- sample(1:length(other_category_wanted$country_code), 1)
-      row_wanted <- other_category_wanted %>%
-        group_by(country_code, time) %>%
+      row_unwanted <- other_category_wanted %>%
         slice(random)
       other_category_wanted <- other_category_wanted %>%
-        group_by(country_code, time) %>%
         slice(-random)
-      row_wanted$age_group = group
-      row_unwanted$age_group <- row_wanted$age_group
+      row_unwanted$variant <- row_wanted$variant
+      row_wanted$variant = variants
       full_desaggregated_week <- rbind(targetted_category_unwanted, targetted_category_wanted, row_wanted, other_category_wanted, other_category_unwanted, row_unwanted)
       fullother <- rbind(other_category_wanted, other_category_unwanted, row_unwanted)
 
       pourcentage_wanted <- full_desaggregated_week %>%
-        group_by(country_code, time, age_group, variant) %>%
+        group_by_all() %>%
         summarise(nb = n()) %>%
-        group_by(country_code, time, age_group) %>%
-        mutate(pourcentage = nb / sum(nb)) %>%
-        filter(variant == variants & age_group == group)
+        group_by(across(all_of(variable))) %>%
+        mutate(pourcentage = nb / sum(nb))%>% filter(variant == variants)
+      for (i in 1:length(group)) {
+        pourcentage_wanted= pourcentage_wanted%>% filter(!!sym(variable[i]) == group[i])
+      }
 
       pourcentage_other <- fullother %>%
-        group_by(country_code, time, age_group, variant) %>%
+        group_by_all() %>%
         summarise(nb = n()) %>%
-        group_by(country_code, time) %>%
+        group_by(across(all_of(variable))) %>%
         mutate(pourcentage = nb / sum(nb)) %>%
         filter(variant == variants)
     }
 
     full_aggregated_week <- full_desaggregated_week %>%
-      group_by(age_group, variant) %>%
+      group_by_all() %>%
       summarise(nb = n()) %>%
-      mutate(country_code = country) %>%
-      mutate(time = week)
+      mutate(country_code = country)
     full_aggregated <- union_all(full_aggregated, full_aggregated_week)
     print(paste("Proportion in week ", week, "=", pourcentage_wanted$pourcentage / sum(pourcentage_other$pourcentage)))
   }

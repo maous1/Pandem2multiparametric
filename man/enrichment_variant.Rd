@@ -2,16 +2,23 @@
 % Please edit documentation in R/enrichment_variant.R
 \name{enrichment_variant}
 \alias{enrichment_variant}
-\title{The function increases the number of convictions of a variant over an age group. The increase is managed by the multiplicateur input (example 1.3 = 30\% more)}
+\title{Title}
 \usage{
-enrichment_variant(data_aggregated, group, variants, multiplicateur)
+enrichment_variant(
+  data_aggregated,
+  variable,
+  group,
+  variants,
+  multiplicateur,
+  time
+)
 }
 \arguments{
-\item{multiplicateur}{}
+\item{time}{}
 }
 \value{
 
 }
 \description{
-The function increases the number of convictions of a variant over an age group. The increase is managed by the multiplicateur input (example 1.3 = 30\% more)
+Title
 }
