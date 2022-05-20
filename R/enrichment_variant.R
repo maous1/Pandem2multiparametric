@@ -113,7 +113,8 @@ enrichment_variant <- function(data_aggregated, variable ,group, variants, multi
       group_by_all() %>%
       summarise(new_cases = n())
     full_aggregated <- union_all(full_aggregated, full_aggregated_week)
-    print(paste("Proportion in week ", week, "=", pourcentage_wanted$pourcentage / sum(pourcentage_other$pourcentage)))
+    print(paste("pourcentage in week ", week, "=", sum(pourcentage_wanted$pourcentage),"for the category"))
+    print(paste("pourcentage in week ", week, "=", sum(pourcentage_other$pourcentage),"for other category"))
   }
 
   return(full_aggregated)
