@@ -2,8 +2,6 @@
 #'
 #' @param case_variants_aggregated
 #' @param vaccination_data_formatted
-#' @param vaccine_rates
-#' @param booster_rates
 #' @param start_date
 #' @param end_date
 #' @param country
@@ -13,8 +11,7 @@
 #' @export
 #'
 #' @examples
-vaccination_simulator <- function(case_variants_aggregated, vaccination_data_formatted, vaccine_rates,
-                                  booster_rates, start_date = NULL, end_date = NULL, country = NULL, vaccination_correction_factors = NULL) {
+vaccination_simulator <- function(case_variants_aggregated, vaccination_data_formatted,start_date = NULL, end_date = NULL, country = NULL, vaccination_correction_factors = NULL) {
   if (is.null(start_date)) {
     start_date <- min(as.vector(case_variants_aggregated$time))
   }
@@ -25,7 +22,8 @@ vaccination_simulator <- function(case_variants_aggregated, vaccination_data_for
     case_variants_aggregated <- case_variants_aggregated %>%
       filter(country_code %in% country)
   }
-
+  vaccine_rates <- format_vaccines_rates(vaccination_data_formatted)
+  booster_rates <- format_booster_rates(vaccination_data_formatted)
   # If no vaccinaion/boster correction factor are given, do not correct for that!
   if (is.null(vaccination_correction_factors)) {
     vaccination_correction_factors <- tibble(year = c(2022, 2021), booster = c(1, 1), vaccine = c(1, 1))

@@ -29,7 +29,7 @@ add_hospitalisation <- function(variants_aggregated,hospitalisation_formatted)
 
   hospi_sample <- function(variantdata, hospidata)
   {
-    variantdata_desagregate <- expandRows(variantdata, count = "new_cases")
+    variantdata_desagregate <- expandRows(variantdata, count = "n")
     variantdata_desagregate$hospitalization[sample(length(variantdata_desagregate$hospitalization),as.integer(hospidata$new_cases))] = "hospi"
     variantdata <- variantdata_desagregate %>% group_by_all()%>% summarise(new_cases = n())
     return(variantdata)

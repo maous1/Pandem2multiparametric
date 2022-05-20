@@ -7,8 +7,6 @@
 vaccination_simulator(
   case_variants_aggregated,
   vaccination_data_formatted,
-  vaccine_rates,
-  booster_rates,
   start_date = NULL,
   end_date = NULL,
   country = NULL,
