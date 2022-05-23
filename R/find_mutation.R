@@ -56,6 +56,6 @@ find_mutation <- function(allmutation){
 
     }
     alldata_deletion = union_all(alldata_deletion,current)
-
   }
+  return(alldata_deletion)
 }

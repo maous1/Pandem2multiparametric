@@ -33,13 +33,13 @@ vaccination_simulator <- function(case_variants_aggregated, vaccination_data_for
   # => conversion column called "vacc_age_group"
   groups <- case_variants_aggregated %>%
     group_by(age_group) %>%
-    summarize(n = sum(nb))
+    summarize(n = sum(new_cases))
   case_variants_age <- tibble()
   for (group in groups$age_group) {
     n_cases <- groups %>%
       filter(age_group == group) %>%
       pull(n)
-    tmp <- expandRows(case_variants_aggregated %>% filter(age_group == group), count = "nb", drop = TRUE) %>%
+    tmp <- expandRows(case_variants_aggregated %>% filter(age_group == group), count = "new_cases", drop = TRUE) %>%
       mutate(age = case_when(
         group == "<15yr" ~ sample(0:14, n_cases, replace = TRUE),
         group == "15-24yr" ~ sample(15:24, n_cases, replace = TRUE),
