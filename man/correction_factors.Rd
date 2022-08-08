@@ -9,9 +9,6 @@ correction_factors(data)
 \arguments{
 \item{data}{}
 }
-\value{
-
-}
 \description{
 Title
 }

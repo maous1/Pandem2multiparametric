@@ -9,9 +9,6 @@ add_hospitalisation(variants_aggregated, hospitalisation_formatted)
 \arguments{
 \item{hospitalisation_formatted}{}
 }
-\value{
-
-}
 \description{
 add_hospitalisation
 }

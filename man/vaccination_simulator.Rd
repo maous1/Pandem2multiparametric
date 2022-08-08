@@ -16,9 +16,6 @@ vaccination_simulator(
 \arguments{
 \item{vaccination_correction_factors}{}
 }
-\value{
-
-}
 \description{
 Title
 }

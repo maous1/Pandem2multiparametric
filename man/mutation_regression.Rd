@@ -9,9 +9,6 @@ mutation_regression(data, numero_mutation, start, end, mutation)
 \arguments{
 \item{mutation}{}
 }
-\value{
-
-}
 \description{
 Title
 }

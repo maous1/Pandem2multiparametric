@@ -16,9 +16,6 @@ enrichment_variant(
 \arguments{
 \item{time}{}
 }
-\value{
-
-}
 \description{
 Title
 }

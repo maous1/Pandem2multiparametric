@@ -9,9 +9,6 @@ format_booster_rates(vaccination_data_formatted)
 \arguments{
 \item{vaccination_data_formatted}{}
 }
-\value{
-
-}
 \description{
 Title
 }

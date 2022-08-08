@@ -9,9 +9,6 @@ format_vaccination_data(ecdc_vaccination_data)
 \arguments{
 \item{ecdc_vaccination_data}{}
 }
-\value{
-
-}
 \description{
 Title
 }

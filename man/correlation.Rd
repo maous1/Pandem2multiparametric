@@ -9,9 +9,6 @@ correlation(trainset, testset)
 \arguments{
 \item{testset}{}
 }
-\value{
-
-}
 \description{
 Title
 }

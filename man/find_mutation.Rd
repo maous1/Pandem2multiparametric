@@ -9,9 +9,6 @@ find_mutation(allmutation)
 \arguments{
 \item{allmutation}{}
 }
-\value{
-
-}
 \description{
 find_mutation
 }

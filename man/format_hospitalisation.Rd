@@ -9,9 +9,6 @@ format_hospitalisation(hospitalisation, case_aggregated, start, end)
 \arguments{
 \item{case_aggregated}{}
 }
-\value{
-
-}
 \description{
 disaggregate hospitalisation files
 }

@@ -9,9 +9,6 @@ format_date_pandem(start, end)
 \arguments{
 \item{end}{}
 }
-\value{
-
-}
 \description{
 Title
 }

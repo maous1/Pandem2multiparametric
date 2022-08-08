@@ -6,9 +6,6 @@
 \usage{
 format_variant(variants_aggregated, start, end)
 }
-\value{
-
-}
 \description{
 Formatting the files from ecdc :"https://opendata.ecdc.europa.eu/covid19/virusvariant/csv/data.csv"- and only keep usefull columns
 }
